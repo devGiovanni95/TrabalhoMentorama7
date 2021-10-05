@@ -2,67 +2,41 @@ package br.com.sistema.hospitalar.controller;
 
 import br.com.sistema.hospitalar.entities.PacienteEntity;
 import br.com.sistema.hospitalar.repositories.PacienteRepository;
+import br.com.sistema.hospitalar.service.PacienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/pacientes")
 public class PacienteController {
 
+    private final List<PacienteEntity> pacientes = new ArrayList<>();
 
     @Autowired
     private PacienteRepository pacienteRepository;
+
+    @Autowired
+    private PacienteService pacienteService;
 
     @GetMapping
     public ResponseEntity<List<PacienteEntity>> findAll() {
        List<PacienteEntity> lista = pacienteRepository.findAll();
         return ResponseEntity.ok().body(lista);
     }
-//
-//    @GetMapping
-//    @RequestMapping
-//    public List<PacienteEntity> findAll() {
-//                List<PacienteEntity> list = pacienteRepository.findAll();
-//        return list;
-//    }
 
-
-//
-//    @Autowired
-//    private final PacienteRepository pacienteRepository;
-//
-//
-//    public PacienteController(PacienteRepository pacienteRepository) {
-//        this.pacienteRepository = pacienteRepository;
-//    }
-//
-//    @GetMapping
-//    public List<PacienteEntity> findAll(){
-//        return this.pacienteRepository.findAll();
-//    }
-//
-
-//
-//    @GetMapping("/{id}")
-//    public PacienteEntity findyById(@PathVariable("id") final  Long id){
-//        return this.pacienteRepository.findById(id).orElse(null);
-//    }
-
-
-    @GetMapping("/{id}")
-    public Object findyById(@PathVariable("id") Long id){
-        return this.pacienteRepository.findById(id);
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<PacienteEntity> findyById(@PathVariable("id") Long id){
+        PacienteEntity paciente = pacienteService.findById(id);
+        return  ResponseEntity.ok().body(paciente);
     }
 
 
-//    @PostMapping
-//    public void createNew(@RequestBody final PacienteEntity paciente){
-//        this.pacienteRepository.save(paciente);
-//    }
 
     @PostMapping
     public @ResponseBody PacienteEntity newPacient(@RequestParam Long id,

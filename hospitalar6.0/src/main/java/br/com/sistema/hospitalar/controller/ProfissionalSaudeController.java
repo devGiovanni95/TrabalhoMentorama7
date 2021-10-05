@@ -1,7 +1,9 @@
 package br.com.sistema.hospitalar.controller;
 
+import br.com.sistema.hospitalar.entities.PacienteEntity;
 import br.com.sistema.hospitalar.entities.ProfissionalSaudeEntity;
 import br.com.sistema.hospitalar.repositories.ProfissionalSaudeRepository;
+import br.com.sistema.hospitalar.service.ProfisssionalSaudeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,16 +21,21 @@ public class ProfissionalSaudeController {
     @Autowired
     private ProfissionalSaudeRepository profissionalSaudeRepository;
 
+    @Autowired
+    private ProfisssionalSaudeService profisssionalSaudeService;
+
     @GetMapping
     public ResponseEntity<List<ProfissionalSaudeEntity>> findAll() {
         List<ProfissionalSaudeEntity> lista = profissionalSaudeRepository.findAll();
         return ResponseEntity.ok().body(lista);
     }
 
-    @GetMapping("/{id}")
-    public ProfissionalSaudeEntity findyById(@PathVariable("id") final Long id) {
-        return this.profissionalSaudeRepository.findById(id).orElse(null);
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<ProfissionalSaudeEntity> findyById(@PathVariable("id") Long id){
+        ProfissionalSaudeEntity profissional = profisssionalSaudeService.findById(id);
+        return  ResponseEntity.ok().body(profissional);
     }
+
 
     @GetMapping("/contagem")
     public ProfissionalSaudeEntity findByNumberMedicByDepartament( ProfissionalSaudeEntity departamento) {

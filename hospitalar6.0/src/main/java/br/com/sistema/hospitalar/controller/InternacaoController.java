@@ -1,7 +1,9 @@
 package br.com.sistema.hospitalar.controller;
 
 import br.com.sistema.hospitalar.entities.InternacaoEntity;
+import br.com.sistema.hospitalar.entities.ProfissionalSaudeEntity;
 import br.com.sistema.hospitalar.repositories.InternacaoRepository;
+import br.com.sistema.hospitalar.service.InternacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,15 +18,19 @@ public class InternacaoController {
     @Autowired
     private  InternacaoRepository internacaoRepository;
 
+    @Autowired
+    private InternacaoService internacaoService;
+
     @GetMapping
     public ResponseEntity<List<InternacaoEntity>> findAll() {
         List<InternacaoEntity> lista = internacaoRepository.findAll();
         return ResponseEntity.ok().body(lista);
     }
 
-    @GetMapping("/{id}")
-    public InternacaoEntity findById(@PathVariable("id") final Long id) {
-        return this.internacaoRepository.findById(id).orElse(null);
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<InternacaoEntity> findyById(@PathVariable("id") Long id){
+        InternacaoEntity profissional = internacaoService.findById(id);
+        return  ResponseEntity.ok().body(profissional);
     }
 
     @PostMapping
