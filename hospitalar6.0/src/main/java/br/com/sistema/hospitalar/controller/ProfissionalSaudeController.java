@@ -1,40 +1,24 @@
 package br.com.sistema.hospitalar.controller;
 
-import br.com.sistema.hospitalar.entities.PacienteEntity;
+import br.com.sistema.hospitalar.dto.ProfissionalSaudeDTO;
 import br.com.sistema.hospitalar.entities.ProfissionalSaudeEntity;
-import br.com.sistema.hospitalar.repositories.ProfissionalSaudeRepository;
 import br.com.sistema.hospitalar.service.ProfisssionalSaudeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(value = "/profissionalSaude")
 public class ProfissionalSaudeController {
 
-
-    @Autowired
-    private ProfissionalSaudeRepository profissionalSaudeRepository;
-
     @Autowired
     private ProfisssionalSaudeService profisssionalSaudeService;
-
-    @GetMapping
-    public ResponseEntity<List<ProfissionalSaudeEntity>> findAll() {
-        List<ProfissionalSaudeEntity> lista = profissionalSaudeRepository.findAll();
-        return ResponseEntity.ok().body(lista);
-    }
-
-    @GetMapping(path = "/{id}")
-    public ResponseEntity<ProfissionalSaudeEntity> findyById(@PathVariable("id") Long id){
-        ProfissionalSaudeEntity profissional = profisssionalSaudeService.findById(id);
-        return  ResponseEntity.ok().body(profissional);
-    }
 
 
     @GetMapping("/contagem")
@@ -42,30 +26,51 @@ public class ProfissionalSaudeController {
         return findByNumberMedicByDepartament(departamento);
 
     }
-//    @GetMapping("/{contagem}")
-//    public ProfissionalSaudeEntity findByNumberMedicByDepartament(@PathVariable("contagem") ProfissionalSaudeEntity departamento) {
-//        return findByNumberMedicByDepartament(departamento);
-//
-//    }
-//
-//    @GetMapping("/{quantidadePorDepartamento}")
-//    public Object findByNumberMedicByDepartament(@PathVariable("quantidadePorDepartamento") final  String departament){
-//        return this.profissionalSaudeService.findByNumberMedicByDepartament(departament);
-//    }
-//
-//    @PostMapping
-//    public void createNew(@RequestBody final ProfissionalSaudeEntity profissional){
-//        this.profissionalSaudeService.save(profissional);
-//    }
-//
-//    @PutMapping
-//    public void update(@RequestBody final ProfissionalSaudeEntity profissionalSaudeEntity){
-//        this.profissionalSaudeService.save(profissionalSaudeEntity);
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    public void delete(@PathVariable("id") final Long id){
-//        this.profissionalSaudeService.deleteById(id);
-//    }
+
+    @GetMapping
+    public ResponseEntity<List<ProfissionalSaudeDTO>> findAll() {
+        List<ProfissionalSaudeEntity> lista = profisssionalSaudeService.findAll();
+        List<ProfissionalSaudeDTO> listDto = lista.stream().map(obj -> new ProfissionalSaudeDTO(obj)).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDto);
+    }
+
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<ProfissionalSaudeDTO> findyById(@PathVariable("id") Long id){
+        ProfissionalSaudeEntity profissionalSaude = profisssionalSaudeService.findById(id);
+        ProfissionalSaudeDTO profissionalSaudeDTO = new ProfissionalSaudeDTO(profissionalSaude);
+        return  ResponseEntity.ok().body(profissionalSaudeDTO);
+    }
+
+
+
+    @PostMapping
+    public ResponseEntity<ProfissionalSaudeEntity> insert(@RequestBody ProfissionalSaudeDTO profissionalSaudeDTO){
+        ProfissionalSaudeEntity profissionalSaude = profisssionalSaudeService.fromDto(profissionalSaudeDTO);
+        profissionalSaude = profisssionalSaudeService.insert(profissionalSaude);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}").buildAndExpand(profissionalSaude.getId()).toUri();
+        return ResponseEntity.created(uri).build();
+    }
+
+
+
+    @PutMapping
+    @RequestMapping(value = "/{id}")
+    public ResponseEntity<Void> update(@RequestBody ProfissionalSaudeDTO profissionalSaudeDTO, @PathVariable Long id){
+        ProfissionalSaudeEntity profissionalSaude = profisssionalSaudeService.fromDto(profissionalSaudeDTO);
+        profissionalSaude.setId(id);
+        profissionalSaude = profisssionalSaudeService.update(profissionalSaude);
+        return ResponseEntity.noContent().build();
+    }
+
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ProfissionalSaudeEntity> delete(@PathVariable("id") final Long id){
+        profisssionalSaudeService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
 
 }

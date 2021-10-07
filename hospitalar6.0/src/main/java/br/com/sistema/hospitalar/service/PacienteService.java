@@ -25,11 +25,6 @@ public class PacienteService {
         return pacienteRepository.findAll();
     }
 
-//    public List<PacienteEntity> findAll(){
-//        List<PacienteEntity> lista = pacienteRepository.findAll();
-//        return lista;
-//    }
-
 
     public PacienteEntity insert(PacienteEntity obj) {
         obj.setId(null);

@@ -32,18 +32,13 @@ public class PacienteController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<PacienteEntity> findyById(@PathVariable("id") Long id){
+    public ResponseEntity<PacienteDTO> findyById(@PathVariable("id") Long id){
         PacienteEntity paciente = pacienteService.findById(id);
-        return  ResponseEntity.ok().body(paciente);
+        PacienteDTO pacienteDTO = new PacienteDTO(paciente);
+        return  ResponseEntity.ok().body(pacienteDTO);
     }
 
-//
-//    @PostMapping
-//    public ResponseEntity<PacienteEntity> insert(@RequestBody PacienteDTO pacienteDTO){
-//        PacienteEntity paciente = pacienteService.fromDto(pacienteDTO);
-//        paciente = pacienteService.insert(paciente);
-//        return ResponseEntity.ok().body(paciente);
-//       }
+
 
     @PostMapping
     public ResponseEntity<PacienteEntity> insert(@RequestBody PacienteDTO pacienteDTO){
