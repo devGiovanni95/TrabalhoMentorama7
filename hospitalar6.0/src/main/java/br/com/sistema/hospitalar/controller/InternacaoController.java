@@ -29,6 +29,11 @@ public class InternacaoController {
         return ResponseEntity.ok().body(lista);
     }
 
+    @GetMapping("/contagem")
+    public ResponseEntity<List<InternacaoEntity>> findByNumberMedicByDepartament() {
+        List<InternacaoEntity> lista = internacaoService.findByNumberMedicByDepartament();
+        return ResponseEntity.ok().body(lista);
+    }
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<InternacaoEntity> findyById(@PathVariable("id") Long id){

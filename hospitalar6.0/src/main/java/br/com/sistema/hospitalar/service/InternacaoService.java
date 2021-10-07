@@ -4,6 +4,7 @@ import br.com.sistema.hospitalar.dto.InternacaoDTO;
 import br.com.sistema.hospitalar.dto.PacienteDTO;
 import br.com.sistema.hospitalar.entities.InternacaoEntity;
 import br.com.sistema.hospitalar.entities.PacienteEntity;
+import br.com.sistema.hospitalar.entities.ProfissionalSaudeEntity;
 import br.com.sistema.hospitalar.repositories.InternacaoRepository;
 import br.com.sistema.hospitalar.repositories.PacienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,9 @@ public class InternacaoService {
         return internacaoRepository.findAll();
     }
 
+    public List<InternacaoEntity> findByNumberMedicByDepartament() {
+        return internacaoRepository.findByNumberHospitalizationByPatient();
+    }
 
     public InternacaoEntity insert(InternacaoEntity obj) {
         obj.setInternacaoPaciente(null);

@@ -29,6 +29,10 @@ public class ProfisssionalSaudeService {
         return profissionalSaudeRepository.findAll();
     }
 
+    public List<ProfissionalSaudeEntity> findByNumberMedicByDepartament() {
+        return profissionalSaudeRepository.findByNumberMedicByDepartament();
+    }
+
 
     public ProfissionalSaudeEntity insert(ProfissionalSaudeEntity obj) {
         obj.setId(null);

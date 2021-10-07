@@ -2,6 +2,7 @@ package br.com.sistema.hospitalar.controller;
 
 import br.com.sistema.hospitalar.dto.ProfissionalSaudeDTO;
 import br.com.sistema.hospitalar.entities.ProfissionalSaudeEntity;
+import br.com.sistema.hospitalar.repositories.ProfissionalSaudeRepository;
 import br.com.sistema.hospitalar.service.ProfisssionalSaudeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +21,20 @@ public class ProfissionalSaudeController {
     @Autowired
     private ProfisssionalSaudeService profisssionalSaudeService;
 
+//    @Autowired
+//    private ProfissionalSaudeRepository profisssionalSaudeRepository;
+
+
+//    @GetMapping("/contagem")
+//    public ProfissionalSaudeEntity findByNumberMedicByDepartament() {
+//        return (ProfissionalSaudeEntity) profisssionalSaudeRepository.findByNumberMedicByDepartament();
+//
+//    }
 
     @GetMapping("/contagem")
-    public ProfissionalSaudeEntity findByNumberMedicByDepartament( ProfissionalSaudeEntity departamento) {
-        return findByNumberMedicByDepartament(departamento);
-
+    public ResponseEntity<List<ProfissionalSaudeEntity>> findByNumberMedicByDepartament() {
+        List<ProfissionalSaudeEntity> lista = profisssionalSaudeService.findByNumberMedicByDepartament();
+        return ResponseEntity.ok().body(lista);
     }
 
     @GetMapping
